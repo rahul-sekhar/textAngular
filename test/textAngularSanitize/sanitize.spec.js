@@ -191,6 +191,11 @@ describe('HTML', function() {
     expectHTML('\na\n').toEqual('&#10;a&#10;');
   });
 
+  it('should allow data attributes', function() {
+    expectHTML('<a data-test="hola">:)</a>').
+      toEqual('<a data-test="hola">:)</a>');
+  });
+
   describe('htmlSanitizerWriter', function() {
     if (angular.isUndefined(window.htmlSanitizeWriter)) return;
 

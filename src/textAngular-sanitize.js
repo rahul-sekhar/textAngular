@@ -522,7 +522,7 @@ function htmlSanitizeWriter(buf, uriValidator){
         angular.forEach(attrs, function(value, key){
           var lkey=angular.lowercase(key);
           var isImage=(tag === 'img' && lkey === 'src') || (lkey === 'background');
-          if ((lkey === 'style' && (value = validStyles(value)) !== '') || validCustomTag(tag, attrs, lkey, value) || validAttrs[lkey] === true &&
+          if ((lkey === 'style' && (value = validStyles(value)) !== '') || validCustomTag(tag, attrs, lkey, value) || (validAttrs[lkey] === true || /^data-[\w-]*$/.test(lkey)) &&
             (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
             out(' ');
             out(key);
