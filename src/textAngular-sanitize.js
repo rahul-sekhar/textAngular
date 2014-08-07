@@ -342,7 +342,11 @@ function htmlParser( html, handler ) {
           || unquotedValue
           || '';
 
-        attrs[name] = decodeEntities(value);
+        if(doubleQuotedValue === undefined && singleQuotedValue === undefined && !unquotedValue) {
+          attrs[name] = null
+        } else {
+          attrs[name] = decodeEntities(value);
+        }
     });
     if (handler.start) handler.start( tagName, attrs, unary );
   }
@@ -526,9 +530,11 @@ function htmlSanitizeWriter(buf, uriValidator){
             (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
             out(' ');
             out(key);
-            out('="');
-            out(encodeEntities(value));
-            out('"');
+            if(value !== null){
+              out('="');
+              out(encodeEntities(value));
+              out('"');
+            }
           }
         });
         out(unary ? '/>' : '>');

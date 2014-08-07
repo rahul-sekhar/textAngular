@@ -196,6 +196,11 @@ describe('HTML', function() {
       toEqual('<a data-test="hola">:)</a>');
   });
 
+  it('should allow iframes', function(){
+    expectHTML('<iframe src="blah" width="100%" height="200px" allowfullscreen></iframe>').
+      toEqual('<iframe src="blah" width="100%" height="200px" allowfullscreen></iframe>');
+  });
+
   describe('htmlSanitizerWriter', function() {
     if (angular.isUndefined(window.htmlSanitizeWriter)) return;
 
