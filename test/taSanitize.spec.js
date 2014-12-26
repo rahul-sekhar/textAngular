@@ -69,6 +69,37 @@ describe('taSanitize', function(){
 			}));
 		});
 
+		describe('validated background-color attribute', function(){
+			it('name', inject(function(taSanitize){
+				var result = angular.element(taSanitize('<div style="background-color: blue;"></div>'));
+				expect(result.attr('style')).toBe('background-color: blue;');
+			}));
+			it('hex value', inject(function(taSanitize){
+				var result = angular.element(taSanitize('<div style="background-color: #000000;"></div>'));
+				expect(result.attr('style')).toBe('background-color: #000000;');
+			}));
+			it('rgba', inject(function(taSanitize){
+				var result = angular.element(taSanitize('<div style="background-color: rgba(20, 20, 20, 0.5);"></div>'));
+				expect(result.attr('style')).toBe('background-color: rgba(20, 20, 20, 0.5);');
+			}));
+			it('rgb', inject(function(taSanitize){
+				var result = angular.element(taSanitize('<div style="background-color: rgb(20, 20, 20);"></div>'));
+				expect(result.attr('style')).toBe('background-color: rgb(20, 20, 20);');
+			}));
+			it('hsl', inject(function(taSanitize){
+				var result = angular.element(taSanitize('<div style="background-color: hsl(20, 20%, 20%);"></div>'));
+				expect(result.attr('style')).toBe('background-color: hsl(20, 20%, 20%);');
+			}));
+			it('hlsa', inject(function(taSanitize){
+				var result = angular.element(taSanitize('<div style="background-color: hsla(20, 20%, 20%, 0.5);"></div>'));
+				expect(result.attr('style')).toBe('background-color: hsla(20, 20%, 20%, 0.5);');
+			}));
+			it('bad value not accepted', inject(function(taSanitize){
+				var result = taSanitize('<div style="background-color: execute(alert(\'test\'));"></div>');
+				expect(result).toBe('<div></div>');
+			}));
+		});
+
 		describe('validated text-align attribute', function(){
 			it('left', inject(function(taSanitize){
 				var result = angular.element(taSanitize('<div style="text-align: left;"></div>'));
@@ -174,6 +205,13 @@ describe('taSanitize', function(){
 		it('should allow html not allowed by sanitizer', inject(function(taSanitize, $sce){
 			var result = taSanitize('<bad-tag></bad-tag>', '', true);
 			expect(result).toBe('<bad-tag></bad-tag>');
+		}));
+	});
+
+	describe('check if style is satinized correctly', function(){
+		it('should translate style to tag', inject(function(taSanitize, $sce){
+			var result = taSanitize('Q<b>W</b><i style="font-weight: bold;">E</i><u style="font-weight: bold; font-style: italic;">R</u>T');
+			expect(result).toBe('Q<b>W</b><i><b>E</b></i><u><i><b>R</b></i></u>T');
 		}));
 	});
 });
